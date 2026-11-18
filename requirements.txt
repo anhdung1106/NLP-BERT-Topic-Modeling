@@ -1,0 +1,31 @@
+# Thu thập dữ liệu
+requests
+beautifulsoup4
+lxml
+
+# Tiền xử lý tiếng Việt
+pandas
+numpy
+pyvi
+
+# Mô hình truyền thống, chỉ số đánh giá
+scikit-learn
+gensim
+
+# BERT
+torch
+transformers
+sentence-transformers
+
+# BERTopic
+bertopic
+umap-learn
+hdbscan
+
+# Trực quan + demo
+matplotlib
+plotly
+streamlit
+
+# Notebook
+jupyter
