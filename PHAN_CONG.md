@@ -10,7 +10,7 @@
 | TV2 | _điền tên_ | Lập trình | Mô hình truyền thống (A1, A2), bộ chỉ số đánh giá, phân tích lỗi | `ket_qua/02_mo_hinh_truyen_thong.md` |
 | TV3 | _điền tên_ | Lập trình | Biểu diễn BERT (B0–B5), A3 | `ket_qua/03_bieu_dien_bert.md` |
 | TV4 | _điền tên_ | Lập trình | BERTopic, Hướng B, A4, bảng và hình kết quả | `ket_qua/04_bertopic_so_sanh.md` |
-| TV5 | _điền tên_ | Lập trình | Repo, tích hợp, ứng dụng demo, video dự phòng | `ket_qua/05_demo.md`, `slides/kich_ban_demo.md` |
+| TV5 | _điền tên_ | Lập trình | Repo, review và merge, ứng dụng demo, video dự phòng | `ket_qua/05_demo.md`, `slides/kich_ban_demo.md` |
 | TV6 | _điền tên_ | Slide | Template, slide lý thuyết | `slides/bo_cuc_slide.md` (phần lý thuyết) |
 | TV7 | _điền tên_ | Slide | Slide dữ liệu và phương pháp | `slides/bo_cuc_slide.md` (phần dữ liệu, phương pháp) |
 | TV8 | _điền tên_ | Slide | Slide kết quả, demo, kết luận | `slides/bo_cuc_slide.md` (phần kết quả, kết luận) |
