@@ -1,23 +1,25 @@
 # Phân công công việc
 
-> Điền tên thành viên vào cột **Họ tên**. Chi tiết phương pháp xem [KE_HOACH.md](KE_HOACH.md).
+> Điền tên thành viên vào cột **Họ tên**. Chi tiết phương pháp xem [KE_HOACH.md](KE_HOACH.md). Tên hàm, tên file, tên cột của từng phần xem [QUY_UOC_CODE.md](QUY_UOC_CODE.md).
 
 ## Tổng quan
 
-| TV | Họ tên | Vai trò | Mảng công việc | File `ket_qua/` / `slides/` phụ trách |
-|---|---|---|---|---|
-| TV1 | _điền tên_ | Lập trình | Dữ liệu: thu thập, tiền xử lý, thống kê mô tả | `ket_qua/01_du_lieu.md` |
-| TV2 | _điền tên_ | Lập trình | Mô hình truyền thống (A1, A2), bộ chỉ số đánh giá, phân tích lỗi | `ket_qua/02_mo_hinh_truyen_thong.md` |
-| TV3 | _điền tên_ | Lập trình | Biểu diễn BERT (B0–B5), A3 | `ket_qua/03_bieu_dien_bert.md` |
-| TV4 | _điền tên_ | Lập trình | BERTopic, Hướng B, A4, bảng và hình kết quả | `ket_qua/04_bertopic_so_sanh.md` |
-| TV5 | _điền tên_ | Lập trình | Repo, review và merge, ứng dụng demo, video dự phòng | `ket_qua/05_demo.md`, `slides/kich_ban_demo.md` |
-| TV6 | _điền tên_ | Slide | Template, slide lý thuyết | `slides/bo_cuc_slide.md` (phần lý thuyết) |
-| TV7 | _điền tên_ | Slide | Slide dữ liệu và phương pháp | `slides/bo_cuc_slide.md` (phần dữ liệu, phương pháp) |
-| TV8 | _điền tên_ | Slide | Slide kết quả, demo, kết luận | `slides/bo_cuc_slide.md` (phần kết quả, kết luận) |
-| TV9 | _điền tên_ | Thuyết trình | Mở đầu, lý thuyết, dữ liệu & phương pháp (~6 phút) | `slides/script_thuyet_trinh.md` (phần 1) |
-| TV10 | _điền tên_ | Thuyết trình | Kết quả, demo, kết luận (~9 phút) | `slides/script_thuyet_trinh.md` (phần 2) |
+| TV | Họ tên | Vai trò | Mảng công việc | File `ket_qua/` / `slides/` phụ trách | Trạng thái |
+|---|---|---|---|---|---|
+| TV1 | _điền tên_ | Lập trình | Dữ liệu: thu thập, tiền xử lý, thống kê mô tả | `ket_qua/01_du_lieu.md` | Chưa bắt đầu |
+| TV2 | _điền tên_ | Lập trình | Mô hình truyền thống (A1, A2), bộ chỉ số đánh giá, phân tích lỗi | `ket_qua/02_mo_hinh_truyen_thong.md` | Chưa bắt đầu |
+| TV3 | _điền tên_ | Lập trình | Biểu diễn BERT (B0–B5), A3 | `ket_qua/03_bieu_dien_bert.md` | Chưa bắt đầu |
+| TV4 | _điền tên_ | Lập trình | BERTopic, Hướng B, A4, bảng và hình kết quả | `ket_qua/04_bertopic_so_sanh.md` | Chưa bắt đầu |
+| TV5 | _điền tên_ | Lập trình | Quản lý repo, duyệt và merge PR, ứng dụng demo, video dự phòng | `ket_qua/05_demo.md`, `slides/kich_ban_demo.md` | Chưa bắt đầu |
+| TV6 | _điền tên_ | Slide | Template, slide lý thuyết | `slides/bo_cuc_slide.md` (phần lý thuyết) | Chưa bắt đầu |
+| TV7 | _điền tên_ | Slide | Slide dữ liệu và phương pháp | `slides/bo_cuc_slide.md` (phần dữ liệu, phương pháp) | Chưa bắt đầu |
+| TV8 | _điền tên_ | Slide | Slide kết quả, demo, kết luận | `slides/bo_cuc_slide.md` (phần kết quả, kết luận) | Chưa bắt đầu |
+| TV9 | _điền tên_ | Thuyết trình | Mở đầu, lý thuyết, dữ liệu & phương pháp (~6 phút) | `slides/script_thuyet_trinh.md` (phần 1) | Chưa bắt đầu |
+| TV10 | _điền tên_ | Thuyết trình | Kết quả, demo, kết luận (~9 phút) | `slides/script_thuyet_trinh.md` (phần 2) | Chưa bắt đầu |
 
 Dàn ý lý thuyết: `slides/dan_y_ly_thuyet.md`, hoàn tất **cuối ngày 2**.
+
+**Cập nhật trạng thái:** mỗi người tự sửa cột *Trạng thái* của mình (`Chưa bắt đầu` → `Đang làm` → `Đã tạo PR` → `Xong`) mỗi khi đổi trạng thái. Gặp vướng quá nửa ngày thì ghi `Vướng: <lý do>` và nhắn TV5.
 
 ---
 
@@ -38,7 +40,7 @@ Dàn ý lý thuyết: `slides/dan_y_ly_thuyet.md`, hoàn tất **cuối ngày 2*
 
 | Công việc | Đầu ra (file) |
 |---|---|
-| Bộ chỉ số dùng chung: ARI, NMI, Purity, C_v, diversity (ngày 2) | `src/metrics.py` (hàm `evaluate`, xem [quy ước](#quy-ước-file-trao-đổi)) |
+| Bộ chỉ số dùng chung: ARI, NMI, Purity, C_v, diversity (ngày 2) | `src/metrics.py` (hàm `evaluate`, xem [QUY_UOC_CODE.md](QUY_UOC_CODE.md) §4.3) |
 | LDA (A1), LSA + K-Means (A2), quét số chiều SVD | `src/baselines.py`, `notebooks/02_mo_hinh_truyen_thong.ipynb` |
 | Lưu mô hình LDA cho demo | `models/lda/` |
 | Ghi kết quả A1, A2 | Các dòng tương ứng trong `outputs/tables/results.csv` |
@@ -67,13 +69,24 @@ Dàn ý lý thuyết: `slides/dan_y_ly_thuyet.md`, hoàn tất **cuối ngày 2*
 
 | Công việc | Đầu ra (file) |
 |---|---|
-| Cấu hình chung (ngày 1) | `src/config.py` (đường dẫn, seed, danh sách mô hình) |
-| Review và merge Pull Request | Nhánh `main` luôn chạy được |
+| Cấu hình chung | `src/config.py` (đã xong) |
+| Duyệt và merge Pull Request, kiểm tra `main` chạy được sau mỗi lần merge | Nhánh `main` luôn chạy được |
+| Theo dõi cột *Trạng thái*, nhắc hạn | Bảng tổng quan ở đầu file này |
 | Ứng dụng demo 4 tab | `app/streamlit_app.py` |
 | Chốt phiên bản thư viện, kiểm thử trên macOS và Windows | `requirements.txt`, mục cài đặt trong `README.md` |
 | Kịch bản demo, video dự phòng | `slides/kich_ban_demo.md`, video (không commit, gửi qua Drive) |
 
 ---
+
+## Để không phải chờ nhau
+
+| Người | Chưa có gì thì làm gì |
+|---|---|
+| TV2, TV3, TV4, TV5 | Viết và chạy thử code trên `load_articles(sample=True)` trong lúc TV1 crawl |
+| TV3, TV4 | Chưa có `metrics.py` của TV2: viết hàm tạm **cùng tên, cùng đầu vào, đầu ra** như [QUY_UOC_CODE.md](QUY_UOC_CODE.md) §4.3, có bản thật thì xóa bản tạm |
+| TV4 | Chưa có embedding của TV3: dùng tạm B0 (`embed_tfidf_svd`) hoặc ma trận ngẫu nhiên đúng số dòng để chạy thử BERTopic |
+| TV5 | Chưa có kết quả: tự tạo `doc_topics.csv`, `results.csv` giả **đúng tên cột** để dựng app |
+| TV6–TV8 | Chưa có kết quả: dựng khung slide theo [KE_HOACH.md](KE_HOACH.md), để trống chỗ bảng và hình |
 
 ## Nhóm slide
 
@@ -98,15 +111,7 @@ Hai thành viên cùng soạn **câu hỏi dự kiến** trong `slides/script_th
 
 ## Quy ước file trao đổi
 
-Chốt trong **ngày 1**. Không đổi tên cột hoặc định dạng khi chưa báo cả nhóm.
-
-| File | Định dạng | Người tạo | Người dùng |
-|---|---|---|---|
-| `data/processed/articles.csv` | `id, title, sapo, content, url, source, date, true_label, text_tok, text_bert, text_bert_seg` (UTF-8) | TV1 | Tất cả |
-| `embeddings/<model>.npy` | Ma trận (số văn bản × số chiều), **thứ tự dòng trùng với `articles.csv`** | TV3 | TV4, TV5 |
-| `outputs/tables/results.csv` | `method, embedding, mode, seed, n_topics, pct_noise, ari, nmi, purity, cv, diversity, time_s` | TV2, TV3, TV4 | TV5, nhóm slide |
-| `outputs/tables/doc_topics.csv` | `id, <model>_topic, x, y` (x, y: tọa độ 2D để vẽ bản đồ) | TV4 | TV5 |
-| `src/metrics.py` → `evaluate(labels_pred, labels_true, topic_words, texts) -> dict` | Trả về `ari, nmi, purity, cv, diversity` | TV2 | TV3, TV4 |
+Tên hàm, hằng số, cột dữ liệu, tên file đầu ra của từng phần được quy định **cố định** trong [QUY_UOC_CODE.md](QUY_UOC_CODE.md). Mọi thành viên lập trình đọc file này trước khi viết code.
 
 ## Quy ước Git
 
@@ -117,8 +122,8 @@ Chốt trong **ngày 1**. Không đổi tên cột hoặc định dạng khi ch�
 | TV3 | `feat/embedding` |
 | TV4 | `feat/bertopic` |
 | TV5 | `feat/app` |
-| TV6–TV10 | Sửa file `.md` trong `slides/` qua branch `docs/slides` |
+| TV6–TV10 | `docs/tv6` … `docs/tv10` (sửa file `.md` trong `slides/`) |
 
-- Merge vào `main` qua Pull Request, TV5 review.
+- Merge vào `main` qua Pull Request. Cách làm từng bước: [HUONG_DAN_GITHUB.md](HUONG_DAN_GITHUB.md).
 - Notebook commit **kèm output** để xem kết quả trên GitHub.
 - Không commit `data/raw/`, video.

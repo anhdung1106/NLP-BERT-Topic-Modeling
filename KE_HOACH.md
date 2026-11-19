@@ -128,7 +128,7 @@ Danh sách stopwords: `data/stopwords/vietnamese_stopwords.txt`.
 | Embedding | `transformers`, `sentence-transformers` | Thay đổi theo Hướng B (§6.2) | Tính một lần, lưu `.npy`, commit lên repo |
 | Giảm chiều | `umap-learn` | `n_neighbors=15, n_components=5, metric='cosine', random_state=42` | Cố định seed để tái lập kết quả |
 | Phân cụm | `hdbscan` | `min_cluster_size` ∈ {15, 30, 50} | Tham số chính quyết định số chủ đề |
-| Trích từ khóa | `CountVectorizer` + c-TF-IDF | Trên `text_tok`, `ngram_range=(1,2)` | |
+| Trích từ khóa | `CountVectorizer` + c-TF-IDF | Trên `text_tok` (đã tách từ, từ ghép như `bóng_đá` là một token) | Dùng unigram để tính coherence nhất quán giữa các mô hình |
 
 ### 5.2. Hai chế độ chạy
 
@@ -276,7 +276,9 @@ Notebook chỉ gọi hàm trong `src/`, không chứa logic dài.
 NLP-BERT-Topic-Modeling/
 ├── README.md                       # cài đặt, cách chạy, cấu trúc
 ├── KE_HOACH.md                     # file này
-├── PHAN_CONG.md                    # phân công, quy ước file trao đổi
+├── PHAN_CONG.md                    # phân công
+├── QUY_UOC_CODE.md                 # tên hàm, hằng số, cột dữ liệu, file đầu ra
+├── HUONG_DAN_GITHUB.md             # hướng dẫn dùng GitHub cho thành viên
 ├── requirements.txt
 ├── .gitignore
 │
@@ -287,7 +289,7 @@ NLP-BERT-Topic-Modeling/
 ├── embeddings/                     # <model>.npy (commit, ~5 MB/mô hình)
 ├── models/                         # BERTopic (safetensors), LDA dùng cho demo
 ├── outputs/
-│   ├── tables/                     # results.csv, doc_topics.csv
+│   ├── tables/                     # results.csv, doc_topics.csv, topic_words.csv, embedding_time.csv
 │   └── figures/
 │
 ├── src/
@@ -318,7 +320,7 @@ NLP-BERT-Topic-Modeling/
     └── script_thuyet_trinh.md
 ```
 
-Quy ước file trao đổi giữa các phần: xem [PHAN_CONG.md](PHAN_CONG.md#quy-ước-file-trao-đổi).
+Tên hàm, hằng số, cột dữ liệu, file đầu ra của từng phần: xem [QUY_UOC_CODE.md](QUY_UOC_CODE.md).
 
 ---
 
@@ -332,7 +334,7 @@ Chi tiết: [PHAN_CONG.md](PHAN_CONG.md).
 | TV2 | Lập trình | Mô hình truyền thống (A1, A2), bộ chỉ số đánh giá, phân tích lỗi |
 | TV3 | Lập trình | Biểu diễn BERT (B0–B5), A3 |
 | TV4 | Lập trình | BERTopic, Hướng B, A4, bảng và hình kết quả |
-| TV5 | Lập trình | Repo, tích hợp, ứng dụng demo |
+| TV5 | Lập trình | Quản lý repo, duyệt và merge PR, ứng dụng demo |
 | TV6 | Slide | Template, slide lý thuyết |
 | TV7 | Slide | Slide dữ liệu và phương pháp |
 | TV8 | Slide | Slide kết quả, demo, kết luận |
@@ -345,7 +347,7 @@ Chi tiết: [PHAN_CONG.md](PHAN_CONG.md).
 
 | Ngày | Lập trình | Slide | Thuyết trình | Mốc kiểm soát |
 |---|---|---|---|---|
-| **1** | TV5 khởi tạo `src/config.py`, chốt quy ước file. TV1 chạy thử thu thập, cung cấp `articles_sample.csv`. TV2, TV3, TV4 phát triển trên dữ liệu mẫu | TV6 thiết kế template | — | Repo hoạt động, có dữ liệu mẫu |
+| **1** | TV5 mời thành viên vào repo, phổ biến quy ước. TV1 chạy thử thu thập, cung cấp `articles_sample.csv`. TV2, TV3, TV4 phát triển trên dữ liệu mẫu | TV6 thiết kế template | — | Repo hoạt động, có dữ liệu mẫu |
 | **2** | TV1 thu thập đầy đủ và tiền xử lý. TV2: LDA, LSA, `metrics.py`. TV3: `embed.py`. TV4: `bertopic_runner.py`. TV5: Tab 1, 2 | TV6 slide lý thuyết; TV7 slide dữ liệu | — | **Đóng băng dữ liệu** cuối ngày; dàn ý lý thuyết hoàn tất |
 | **3** | TV3 tính và commit toàn bộ embedding, chạy A3. TV2 chạy A1, A2. TV4 chạy Hướng B, quét tham số. TV5: Tab 3 | TV7 slide phương pháp | TV9, TV10 nắm lý thuyết, cài đặt repo, chạy thử demo | Đủ embedding trên repo |
 | **4** | TV4 chạy A4 và 3 seed. TV2 phân tích lỗi. Thí nghiệm bổ sung nếu kịp | TV8 dựng khung slide kết quả | — | **Đóng băng kết quả** |

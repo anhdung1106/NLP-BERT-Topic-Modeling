@@ -4,6 +4,8 @@ Seminar môn Xử lý ngôn ngữ tự nhiên: so sánh topic modeling dựa tr�
 
 - Kế hoạch chi tiết: [KE_HOACH.md](KE_HOACH.md)
 - Phân công: [PHAN_CONG.md](PHAN_CONG.md)
+- Hướng dẫn dùng GitHub (đọc trước khi bắt đầu): [HUONG_DAN_GITHUB.md](HUONG_DAN_GITHUB.md)
+- Quy ước code (tên hàm, tên file, tên cột): [QUY_UOC_CODE.md](QUY_UOC_CODE.md)
 
 ## Cài đặt
 
@@ -41,6 +43,6 @@ slides/      dàn ý lý thuyết, bố cục slide, kịch bản demo, script t
 
 ## Quy ước làm việc
 
-- Mỗi thành viên làm trên branch riêng (`feat/data`, `feat/baselines`, `feat/embedding`, `feat/bertopic`, `feat/app`), merge vào `main` qua Pull Request.
+- Mỗi thành viên làm trên branch riêng, merge vào `main` qua Pull Request. Chi tiết: [HUONG_DAN_GITHUB.md](HUONG_DAN_GITHUB.md).
 - Không sửa `data/processed/articles.csv` sau khi đã đóng băng (cuối ngày 2).
-- Định dạng file trao đổi giữa các phần: xem [PHAN_CONG.md](PHAN_CONG.md#quy-ước-file-trao-đổi).
+- Tên hàm, hằng số, cột dữ liệu, file đầu ra: tuân theo [QUY_UOC_CODE.md](QUY_UOC_CODE.md).
