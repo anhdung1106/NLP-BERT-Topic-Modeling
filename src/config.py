@@ -72,5 +72,5 @@ DEFAULT_MIN_CLUSTER_SIZE = 30
 
 # Cấu hình chốt: giá trị tạm, TV4 cập nhật sau ngày 4
 BEST_EMBEDDING = "b3_minilm"
-BEST_SVD_DIM = 20
+BEST_SVD_DIM = 50
 BEST_MIN_CLUSTER_SIZE = 30
