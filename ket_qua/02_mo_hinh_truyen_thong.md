@@ -16,11 +16,15 @@
 
 | Chỉ số | Cách tính | Khoảng giá trị |
 |---|---|---|
-| ARI | | |
-| NMI | | |
-| Purity | | |
-| C_v | | |
-| Topic diversity | | |
+| ARI (Adjusted Rand Index) | Xét mọi cặp bài: cặp được xếp "nhất quán" nếu cùng cụm và cùng nhãn, hoặc khác cụm và khác nhãn. Rand Index = tỷ lệ cặp nhất quán; ARI hiệu chỉnh để phân cụm ngẫu nhiên cho giá trị ≈ 0: ARI = (RI − E[RI]) / (max RI − E[RI]) | ≤ 1. ≈ 0: không hơn ngẫu nhiên; 1: khớp hoàn toàn; có thể âm |
+| NMI (Normalized Mutual Information) | Lượng thông tin chung giữa cụm C và nhãn thật Y, chuẩn hóa theo entropy: NMI = 2·I(Y; C) / (H(Y) + H(C)) | 0 → 1. 0: cụm không nói gì về nhãn; 1: khớp hoàn toàn |
+| Purity | Mỗi cụm gán nhãn chiếm đa số trong cụm; Purity = (1/N) · Σ (số bài thuộc nhãn đa số của từng cụm) | ~1/6 → 1. Tăng giả tạo khi số cụm tăng (mỗi bài một cụm thì Purity = 1), nên chỉ dùng kèm ARI, NMI |
+| C_v (coherence) | Đo mức độ top 10 từ của mỗi chủ đề thường xuất hiện cùng nhau trong văn bản: đếm đồng xuất hiện trong cửa sổ trượt 110 từ, tính NPMI giữa các từ, rồi lấy độ tương đồng cosine; trung bình trên các chủ đề. Tính bằng `gensim` trên `text_tok` | 0 → 1. Thực tế thường 0,4–0,8; càng cao chủ đề càng dễ hiểu |
+| Topic diversity | Số từ khác nhau trong top 10 từ của tất cả chủ đề / (số chủ đề × 10) | 0 → 1. 1: không chủ đề nào trùng từ; thấp: các chủ đề lặp từ của nhau |
+
+- **ARI, NMI, Purity (chỉ số ngoại):** so với nhãn gốc của báo (`true_label`), chỉ dùng để *đánh giá*, không dùng để chọn tham số. Bài nhiễu (nhãn `-1` của HDBSCAN) được loại trước khi tính; tỷ lệ nhiễu báo riêng ở cột `pct_noise`.
+- **C_v, diversity (chỉ số nội):** không cần nhãn, đo chất lượng từ khóa của chủ đề. Dùng để *chọn tham số* (ví dụ số chiều SVD ở mục 3).
+- **Vì sao cần cả hai nhóm:** mô hình có thể gom cụm khác cách chia chuyên mục của báo nhưng vẫn hợp lý (ví dụ chủ đề "Nvidia"); khi đó ARI, NMI thấp nhưng C_v vẫn cao.
 
 ## 3. Chọn siêu tham số
 
@@ -66,17 +70,29 @@
 
 > Mỗi slide: tiêu đề, 2–4 ý chính, bảng/hình sử dụng, điểm cần nhấn mạnh khi thuyết trình.
 
-### Slide 1 – _tiêu đề_
+### Slide 1 – Đo chất lượng chủ đề bằng 5 chỉ số
 
 - **Ý chính:**
-  - 
-- **Bảng / hình:** `outputs/figures/...`
-- **Điểm nhấn:** 
+  - Chỉ số ngoại (so với chuyên mục của báo): ARI, NMI, Purity — dùng để đánh giá.
+  - Chỉ số nội (không cần nhãn): C_v đo từ khóa có "đi cùng nhau" không, diversity đo các chủ đề có trùng từ không — dùng để chọn tham số.
+  - Cả nhóm dùng chung một bộ hàm (`src/metrics.py`) nên mọi mô hình được chấm cùng một cách.
+- **Bảng / hình:** bảng 5 chỉ số rút gọn từ Mục 2 (tên, ý nghĩa một dòng, khoảng giá trị)
+- **Điểm nhấn:** chọn tham số bằng chỉ số nội, không nhìn nhãn thật — đúng tinh thần học không giám sát.
 
-### Slide 2 – _tiêu đề_
+### Slide 2 – Mô hình truyền thống: LSA + K-Means vượt LDA
 
 - **Ý chính:**
-  - 
-- **Bảng / hình:** 
-- **Điểm nhấn:** 
+  - A1 – LDA trên bag-of-words; A2 – TF-IDF → SVD → K-Means; cùng k = 6, chạy 3 seed.
+  - Chọn SVD 50 chiều theo C_v (nếu nhìn nhãn thật sẽ chọn 20 chiều).
+  - LSA tốt hơn LDA ở mọi chỉ số (NMI 0,65 so với 0,50; C_v 0,79 so với 0,68) và nhanh hơn ~12 lần; LDA kém ổn định giữa các seed.
+- **Bảng / hình:** bảng Mục 1 (rút gọn còn NMI, C_v, thời gian) hoặc `outputs/figures/fig4_bang1.png` của TV4
+- **Điểm nhấn:** LSA vừa nhanh vừa ổn định — là mốc so sánh (baseline) cho BERTopic.
 
+### Slide 3 – Bag-of-words nhầm ở đâu?
+
+- **Ý chính:**
+  - Nhận ra tốt Thể thao, Giải trí, Sức khỏe (263–282/300 bài mỗi nhãn vào đúng một chủ đề).
+  - Lẫn Thời sự – Kinh tế – Công nghệ: LSA gộp 285 bài Thời sự + 150 bài Kinh tế vào một cụm 589 bài.
+  - Tách riêng chủ đề "Nvidia": gom theo từ trùng (tên riêng) chứ không theo chuyên mục.
+- **Bảng / hình:** top 5 từ khóa mỗi chủ đề (Mục 4) + bảng chéo chủ đề × nhãn thật (ô 9 notebook 02)
+- **Điểm nhấn:** đây là hạn chế BERTopic cần khắc phục → chuyển sang phần kết quả BERT.
