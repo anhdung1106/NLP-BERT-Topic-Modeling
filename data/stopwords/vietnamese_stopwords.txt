@@ -173,7 +173,6 @@ gần_đây
 thời_gian
 trường_hợp
 khoảng
-hơn
 gần
 đầu
 cuối
@@ -213,3 +212,52 @@ thứ
 giúp
 mức
 cô
+# Tên báo và chữ ký (nếu để lại, mô hình sẽ gom cụm theo báo thay vì theo chủ đề)
+dân_trí
+vnexpress
+pv
+# Từ chung chung xuất hiện ở 30-50% số bài, làm từ khóa chủ đề vô nghĩa
+nhà
+lớn
+tạo
+khiến
+tới
+một_số
+cách
+mang
+nhận
+đáng
+chú_ý
+đặc_biệt
+nhằm
+sang
+giữ
+# Tên báo viết tắt / ký hiệu lộ nguồn (Dân trí ghi "SN 1975", Tuổi Trẻ tự nhắc tên)
+tuổi_trẻ
+sn
+# Từ chung chung còn lại: xuất hiện ở 5-6/6 chủ đề, mỗi chủ đề 25-75% số bài
+cao
+hoạt_động
+khả_năng
+tổ_chức
+phát_triển
+quá_trình
+sử_dụng
+hỗ_trợ
+quan_trọng
+đối_với
+cạnh
+ngoài
+hướng
+gây
+# Từ chức năng / chung chung còn nổi lên sau vòng kiểm tra top từ lần 2
+riêng
+dành
+tên
+tính
+chính
+thường
+phù_hợp
+nguồn
+xem
+so

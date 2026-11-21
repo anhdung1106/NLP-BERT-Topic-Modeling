@@ -217,12 +217,16 @@ def _parse_date(soup: BeautifulSoup) -> str:
 
 
 def _breadcrumb_ok(soup: BeautifulSoup, topic: str, source: str) -> bool:
-    """Đối chiếu breadcrumb để chắc bài thuộc đúng chuyên mục. Không tìm thấy breadcrumb thì chấp nhận."""
+    """Đối chiếu breadcrumb để chắc bài thuộc đúng chuyên mục.
+
+    Trang không có breadcrumb thì KHÔNG nhận: bài báo thật luôn có breadcrumb, còn trang
+    chính sách, điều khoản, liên hệ... thì không (ví dụ "Chính sách bảo mật dữ liệu cá nhân" của Dân trí).
+    """
     slug = _category_slug(CATEGORY_URLS[topic][source])
     crumbs = soup.select("ul.breadcrumb a, .breadcrumb a, [class*=breadcrumb] a, "
                          "[class*=bread-crumb] a")
     if not crumbs:
-        return True
+        return False
     for a in crumbs:
         for seg in urlparse(a.get("href", "")).path.strip("/").split("/"):
             if seg.replace(".htm", "") == slug:

@@ -12,15 +12,19 @@ import unicodedata
 
 import pandas as pd
 from pyvi import ViTokenizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 from src.config import (ARTICLE_COLUMNS, ARTICLES_CSV, ARTICLES_PER_TOPIC, DATA_RAW,
-                        MIN_ARTICLES_PER_TOPIC, MIN_WORDS, SAMPLE_CSV, SEED, STOPWORDS_TXT,
-                        TOPICS)
-
-SAMPLE_PER_TOPIC = 20
+                        MIN_ARTICLES_PER_TOPIC, MIN_WORDS, NEAR_DUP_THRESHOLD, SAMPLE_CSV, SAMPLE_PER_TOPIC, SEED, STOPWORDS_TXT,
+                        TOPICS, VECTORIZER_PARAMS)
 
 _TAG_RE = re.compile(r"<[^>]+>")
 _URL_RE = re.compile(r"(https?://|www\.)\S+")
+_EMAIL_RE = re.compile(r"\S+@\S+")  # email tòa soạn / tác giả ở cuối bài
+_TPHCM_RE = re.compile(r"\bTP\s*\.?\s*HCM\b", re.I)  # TP.HCM, TP. HCM, TPHCM, TP HCM
+_TY_RE = re.compile(r"\b[Tt]ỉ\b(?!\s+(?:mỉ|tê)\b)")  # tỉ -> tỷ (trừ "tỉ mỉ", "tỉ tê")
+_OTO_RE = re.compile(r"\b([Ôô])tô\b")  # VnExpress viết "ôtô", báo khác viết "ô tô"
+_EKIP_RE = re.compile(r"\b([Êê])[\s-]kíp\b")  # "ê-kíp" / "ê kíp" -> "êkíp"
 _CTRL_RE = re.compile(r"[\u0000-\u001f\u007f-\u009f\u200b-\u200f\u2028\u2029\ufeff]")  # ký tự điều khiển, vô hình
 _SPACE_RE = re.compile(r"\s+")
 _HAS_LETTER_RE = re.compile(r"[^\W\d_]")  # có ít nhất 1 chữ cái (loại dấu câu, số)
@@ -38,14 +42,20 @@ def load_stopwords(path=STOPWORDS_TXT) -> set[str]:
 
 
 def clean_text(text: str) -> str:
-    """Bỏ HTML, URL, ký tự thừa, chuẩn hóa Unicode NFC, gộp khoảng trắng. Giữ hoa/thường."""
+    """Bỏ HTML, URL, email, ký tự thừa; chuẩn hóa Unicode NFC, TP.HCM -> TP_HCM, tỉ -> tỷ; gộp khoảng trắng. Giữ hoa/thường."""
     if not isinstance(text, str):
         return ""
     text = html.unescape(text)
     text = _TAG_RE.sub(" ", text)
     text = _URL_RE.sub(" ", text)
+    text = _EMAIL_RE.sub(" ", text)
     text = unicodedata.normalize("NFC", text)
     text = _CTRL_RE.sub(" ", text)
+    # mỗi báo viết một kiểu: thống nhất để cùng một từ không bị tách thành nhiều từ khác nhau
+    text = _TPHCM_RE.sub("TP_HCM", text)
+    text = _TY_RE.sub(lambda m: "Tỷ" if m.group(0)[0] == "T" else "tỷ", text)
+    text = _OTO_RE.sub(lambda m: m.group(1) + " tô", text)
+    text = _EKIP_RE.sub(lambda m: m.group(1) + "kíp", text)
     return _SPACE_RE.sub(" ", text).strip()
 
 
@@ -98,9 +108,10 @@ def _clean_content(content: str) -> str:
 
 
 def _full_text(title: str, sapo: str, content: str) -> str:
-    """Toàn văn để tạo text_tok. VnExpress, Thanh Niên hay lặp sapo ở đầu thân bài: không ghép lần nữa."""
+    """Toàn văn để tạo text_tok. Nhiều bài đã lặp sapo trong thân bài (thường ở đầu, đôi khi sau 1-2 câu dẫn,
+    ~32 bài như vậy): có sapo trong thân bài thì không ghép lần nữa."""
     parts = [title]
-    if sapo and not content.startswith(clean_text(sapo)[:40]):
+    if sapo and clean_text(sapo)[:40] not in content:
         parts.append(sapo)
     parts.append(content)
     return ". ".join(parts)
@@ -139,11 +150,42 @@ def _pick_balanced(group: pd.DataFrame, n: int, seed: int) -> pd.DataFrame:
     return group.loc[chosen]
 
 
+# Trang không phải bài báo (chính sách, điều khoản...) hoặc ngày giả (2010-01-01) lọt vào khi crawl
+_NON_ARTICLE_TITLE_RE = re.compile(
+    r"^(?:chính sách (?:bảo mật|quyền riêng tư)|điều khoản (?:sử dụng|dịch vụ)|quy chế hoạt động|liên hệ quảng cáo)\b", re.I)
+MIN_YEAR = 2020
+
+
+def _is_article(df: pd.DataFrame) -> pd.Series:
+    """True với dòng là bài báo thật: tiêu đề không phải tên trang chính sách, ngày (nếu có) không quá cũ."""
+    years = pd.to_numeric(df["date"].str[:4], errors="coerce")
+    return ~df["title"].str.contains(_NON_ARTICLE_TITLE_RE) & ~(years < MIN_YEAR)
+
+
+def _drop_near_duplicates(df: pd.DataFrame, threshold: float = NEAR_DUP_THRESHOLD) -> pd.DataFrame:
+    """Loại bài gần trùng: cosine TF-IDF của text_tok > threshold (cùng một tin do các báo đăng lại).
+
+    Duyệt theo thứ tự hiện có, giữ bài đầu tiên của mỗi nhóm trùng. Gộp cả các chủ đề với nhau
+    vì một tin xuất hiện ở hai chuyên mục cũng làm nhãn bị nhiễu.
+    """
+    if len(df) < 2:
+        return df
+    tfidf = TfidfVectorizer(**VECTORIZER_PARAMS).fit_transform(df["text_tok"])
+    sim = (tfidf @ tfidf.T).tocoo()  # tfidf đã chuẩn hóa L2 nên tích vô hướng = cosine
+    dropped = set()
+    for i, j, v in sorted(zip(sim.row, sim.col, sim.data)):
+        if i < j and v > threshold and i not in dropped and j not in dropped:
+            dropped.add(j)
+            print(f"  gần trùng ({v:.3f}): giữ {df['url'].iloc[i]} | bỏ {df['url'].iloc[j]}")
+    return df.iloc[[k for k in range(len(df)) if k not in dropped]]
+
+
 def build_articles(raw_dir=DATA_RAW, seed=SEED, per_topic=None) -> pd.DataFrame:
-    """Đọc *.jsonl -> lọc -> loại trùng -> cân bằng -> tạo 3 cột văn bản -> xáo trộn -> đánh id.
+    """Đọc *.jsonl -> lọc -> loại trùng và gần trùng -> cân bằng -> tạo 3 cột văn bản -> xáo trộn -> đánh id.
 
     per_topic: số bài mỗi chủ đề muốn lấy. Mặc định ARTICLES_PER_TOPIC; nếu có chủ đề không đủ
-    thì hạ xuống bằng chủ đề ít nhất để các chủ đề cân bằng.
+    thì hạ xuống bằng chủ đề ít nhất để các chủ đề cân bằng. Loại bài trước khi cân bằng, nên bài
+    thừa (dự phòng) tự động bù vào chỗ bài bị loại.
     """
     df = _read_raw(raw_dir)
     n0 = len(df)
@@ -152,13 +194,23 @@ def build_articles(raw_dir=DATA_RAW, seed=SEED, per_topic=None) -> pd.DataFrame:
         df[col] = df[col].fillna("").astype(str)
 
     df["content"] = df["content"].map(_clean_content)
-    # lọc: tiêu đề trống hoặc quá ngắn (<= 2 từ, thường là lấy nhầm), bài dưới MIN_WORDS từ
+    # lọc: tiêu đề trống hoặc quá ngắn (<= 2 từ, thường là lấy nhầm), bài dưới MIN_WORDS từ, trang không phải bài báo
     df = df[(df["title"].str.split().str.len() > 2) & (df["content"].str.split().str.len() >= MIN_WORDS)]
+    n_page = int((~_is_article(df)).sum())
+    df = df[_is_article(df)]
     # loại trùng theo URL, rồi theo tiêu đề
     df = df.drop_duplicates("url")
     df["_tkey"] = df["title"].map(_title_key)
     df = df.drop_duplicates("_tkey").drop(columns="_tkey")
-    print(f"Đọc {n0} bài -> sau lọc và loại trùng còn {len(df)} bài")
+    print(f"Đọc {n0} bài -> sau lọc và loại trùng còn {len(df)} bài (trong đó đã bỏ {n_page} trang không phải bài báo)")
+
+    # text_tok của toàn bộ bài còn lại, để so gần trùng trước khi cân bằng
+    stopwords = load_stopwords()
+    full = [_full_text(t, s, c) for t, s, c in zip(df["title"], df["sapo"], df["content"])]  # toàn văn
+    df["text_tok"] = [make_text_tok(x, stopwords) for x in full]
+    n1 = len(df)
+    df = _drop_near_duplicates(df.reset_index(drop=True))
+    print(f"Loại {n1 - len(df)} bài gần trùng (cosine TF-IDF > {NEAR_DUP_THRESHOLD}) -> còn {len(df)} bài")
 
     # cân bằng số bài giữa các chủ đề
     counts = df["true_label"].value_counts().reindex(list(TOPICS), fill_value=0)
@@ -166,6 +218,8 @@ def build_articles(raw_dir=DATA_RAW, seed=SEED, per_topic=None) -> pd.DataFrame:
     target = min(per_topic or ARTICLES_PER_TOPIC, int(counts.min()))
     if target < MIN_ARTICLES_PER_TOPIC and per_topic is None:
         print(f"CẢNH BÁO: chủ đề ít nhất chỉ có {target} bài (< {MIN_ARTICLES_PER_TOPIC}). Cần crawl thêm.")
+    elif per_topic is None and target < ARTICLES_PER_TOPIC:
+        print(f"LƯU Ý: chủ đề ít nhất chỉ có {target} bài (< {ARTICLES_PER_TOPIC}), mỗi chủ đề lấy {target} bài.")
     parts = [_pick_balanced(g, target, seed + i) for i, (_, g) in enumerate(df.groupby("true_label"))]
     df = pd.concat(parts)
 
@@ -173,12 +227,9 @@ def build_articles(raw_dir=DATA_RAW, seed=SEED, per_topic=None) -> pd.DataFrame:
     df = df.sample(frac=1, random_state=seed).reset_index(drop=True)
     df["id"] = [f"doc_{i + 1:04d}" for i in range(len(df))]
 
-    # 3 phiên bản văn bản
-    stopwords = load_stopwords()
+    # 2 phiên bản còn lại (text_tok đã tạo ở trên)
     df["text_bert"] = [make_text_bert(t, s) for t, s in zip(df["title"], df["sapo"])]
     df["text_bert_seg"] = df["text_bert"].map(segment)
-    full = [_full_text(t, s, c) for t, s, c in zip(df["title"], df["sapo"], df["content"])]  # toàn văn
-    df["text_tok"] = [make_text_tok(x, stopwords) for x in full]
     return df[ARTICLE_COLUMNS]
 
 
