@@ -1,0 +1,13 @@
+method,topic,n_docs,words
+lda,0,278,việt_nam đội trận bóng đội_tuyển giải cầu_thủ hlv thi_đấu thắng
+lda,1,159,nvidia công_ty huang ceo mỹ lãnh_đạo vụ jensen chip công_nghệ
+lda,2,281,đồng giá tỷ triệu giảm usd tăng tiền thị_trường đầu_tư
+lda,3,398,bác_sĩ bệnh dùng điều_trị người_bệnh bệnh_viện giảm tăng tình_trạng y_tế
+lda,4,349,việt_nam doanh_nghiệp công_nghệ nước kinh_tế đầu_tư xây_dựng sản_xuất sản_phẩm nghiên_cứu
+lda,5,335,phim diễn_viên chương_trình văn_hóa khán_giả tuổi gia_đình ăn bộ việt_nam
+lsa_kmeans,0,272,trận đội đội_tuyển bóng cầu_thủ hlv việt_nam u17 giải thắng
+lsa_kmeans,1,198,nvidia usd đồng huang giá cổ_phiếu tỷ công_ty ceo thị_trường
+lsa_kmeans,2,288,bác_sĩ điều_trị người_bệnh bệnh bệnh_viện ung_thư ăn thuốc đau thận
+lsa_kmeans,3,589,doanh_nghiệp việt_nam công_nghệ dự_án đầu_tư đất dân kinh_tế tỉnh nước
+lsa_kmeans,4,282,phim diễn_viên khán_giả ca_sĩ nghệ_sĩ văn_hóa tác_phẩm chương_trình vai âm_nhạc
+lsa_kmeans,5,171,iphone dùng thiết_bị apple màn_hình điện_thoại pin camera tính_năng samsung
