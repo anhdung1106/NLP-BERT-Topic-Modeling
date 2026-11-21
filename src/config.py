@@ -39,6 +39,8 @@ SOURCES = ["vnexpress", "tuoitre", "thanhnien", "dantri"]
 ARTICLES_PER_TOPIC = 300
 MIN_ARTICLES_PER_TOPIC = 200
 MIN_WORDS = 150
+SAMPLE_PER_TOPIC = 20  # số bài mỗi chủ đề trong articles_sample.csv
+NEAR_DUP_THRESHOLD = 0.95  # cosine TF-IDF của text_tok: lớn hơn mức này coi là cùng một bài
 REQUEST_DELAY = 1.0
 ARTICLE_COLUMNS = ["id", "title", "sapo", "content", "url", "source", "date",
                    "true_label", "text_tok", "text_bert", "text_bert_seg"]

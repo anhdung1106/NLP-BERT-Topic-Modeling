@@ -91,11 +91,11 @@ Mọi đường dẫn, seed, danh sách chủ đề, danh sách mô hình đều
 | Hàm | Đầu vào | Trả về | Mô tả |
 |---|---|---|---|
 | `load_stopwords(path=STOPWORDS_TXT)` | | `set[str]` | Mỗi dòng một từ, dạng đã tách từ (`cho_biết`) |
-| `clean_text(text: str)` | | `str` | Bỏ HTML, URL, ký tự thừa, chuẩn hóa Unicode NFC, gộp khoảng trắng. **Giữ hoa/thường** |
+| `clean_text(text: str)` | | `str` | Bỏ HTML, URL, email, ký tự thừa, chuẩn hóa Unicode NFC, thống nhất cách viết giữa các báo (`TP.HCM`→`TP_HCM`, `tỉ`→`tỷ`, `ôtô`→`ô tô`, `ê-kíp`→`êkíp`), gộp khoảng trắng. **Giữ hoa/thường** |
 | `segment(text: str)` | | `str` | Tách từ bằng `pyvi.ViTokenizer.tokenize` |
-| `make_text_tok(text: str, stopwords: set[str])` | Văn bản thô | `str` | `clean_text` → chữ thường → `segment` → bỏ stopwords, dấu câu, số |
+| `make_text_tok(text: str, stopwords: set[str])` | Văn bản thô | `str` | `clean_text` → `segment` (tách từ khi còn hoa/thường) → chữ thường → bỏ stopwords, dấu câu, số, token 1 ký tự |
 | `make_text_bert(title: str, sapo: str)` | | `str` | `clean_text(title + ". " + sapo)` |
-| `build_articles(raw_dir=DATA_RAW, seed=SEED)` | | `pd.DataFrame` | Đọc `*.jsonl`, lọc, loại trùng, cân bằng `ARTICLES_PER_TOPIC`, tạo 3 cột văn bản, xáo trộn, đánh `id`. Cột đúng `ARTICLE_COLUMNS` |
+| `build_articles(raw_dir=DATA_RAW, seed=SEED)` | | `pd.DataFrame` | Đọc `*.jsonl`, lọc (bỏ trang không phải bài báo), loại trùng url/tiêu đề và gần trùng nội dung (cosine TF-IDF > 0.95), cân bằng `ARTICLES_PER_TOPIC`, tạo 3 cột văn bản, xáo trộn, đánh `id`. Cột đúng `ARTICLE_COLUMNS` |
 | `load_articles(sample: bool = False)` | | `pd.DataFrame` | Đọc `SAMPLE_CSV` hoặc `ARTICLES_CSV`. **Mọi người dùng hàm này để đọc dữ liệu** |
 | `get_tokens(df: pd.DataFrame)` | | `list[list[str]]` | `df["text_tok"].str.split().tolist()`, dùng cho LDA và coherence |
 
