@@ -43,7 +43,7 @@ Mọi đường dẫn, seed, danh sách chủ đề, danh sách mô hình đều
 | `TOPICS` | 6 khóa chủ đề (`the_thao`, …) → tên hiển thị có dấu |
 | `EMBEDDINGS` | 6 khóa mô hình `b0_tfidf_svd` … `b5_e5`, kèm tên mô hình và cột văn bản đầu vào |
 | `VECTORIZER_PARAMS`, `BERTOPIC_VECTORIZER_PARAMS`, `UMAP_PARAMS` | Tham số dùng chung |
-| `BEST_EMBEDDING`, `BEST_SVD_DIM`, `BEST_MIN_CLUSTER_SIZE` | Cấu hình chốt. Hiện là **giá trị tạm**, TV4 cập nhật sau ngày 4 |
+| `BEST_EMBEDDING`, `BEST_SVD_DIM`, `BEST_MIN_CLUSTER_SIZE` | Cấu hình chốt. `BEST_SVD_DIM` do TV2 chốt theo C_v. Hai hằng số còn lại là **giá trị tạm**, TV4 cập nhật sau ngày 4 |
 
 ---
 
@@ -179,7 +179,7 @@ Chạy: `python -m src.crawl`. Bảng chuyên mục từng báo khai báo trong 
 | `results.csv` | `method, embedding, mode, param, seed, n_topics, pct_noise, ari, nmi, purity, cv, diversity, time_s` | TV2 (`lda`, `lsa_kmeans`), TV3 (`bert_kmeans`), TV4 (`bertopic`). Chỉ ghi qua `save_results` |
 | `embedding_time.csv` | `embedding, n_docs, dim, time_s` | TV3 |
 | `topic_words.csv` | `method, topic, n_docs, words` (`words`: các từ cách nhau 1 dấu cách) | TV2 (`lda`, `lsa_kmeans`), TV4 (`bertopic_k6`, `bertopic_hdbscan`), chỉ cho **cấu hình chốt** |
-| `doc_topics.csv` | `id, true_label, x, y, lda, lsa_kmeans, bert_kmeans, bertopic_k6, bertopic_hdbscan` | TV4 tổng hợp (nhãn của **cấu hình chốt**, seed 42; `x, y` từ `coords_2d` của `BEST_EMBEDDING`) |
+| `doc_topics.csv` | `id, true_label, x, y, lda, lsa_kmeans, bert_kmeans, bertopic_k6, bertopic_hdbscan` | Mỗi người thêm cột của mình: TV2 (`lda`, `lsa_kmeans`), TV3 (`bert_kmeans`), TV4 (`bertopic_k6`, `bertopic_hdbscan`, `x`, `y`). **Đọc file nếu đã có, chỉ thêm hoặc cập nhật cột của mình, không tạo lại file, không xóa cột của người khác.** Nhãn của cấu hình chốt, seed 42; `x, y` từ `coords_2d` của `BEST_EMBEDDING` |
 
 Số thực làm tròn 4 chữ số thập phân. `time_s` đo bằng `time.perf_counter()`.
 
