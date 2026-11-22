@@ -1,0 +1,7 @@
+embedding,n_docs,dim,time_s
+b0_tfidf_svd,1800,100,1.1355
+b1_mbert_cls,1800,768,182.6839
+b2_mbert_mean,1800,768,173.1924
+b3_minilm,1800,384,37.4062
+b4_vi_sbert,1800,768,104.4018
+b5_e5,1800,768,129.1212
