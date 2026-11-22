@@ -43,8 +43,7 @@ Mọi đường dẫn, seed, danh sách chủ đề, danh sách mô hình đều
 | `TOPICS` | 6 khóa chủ đề (`the_thao`, …) → tên hiển thị có dấu |
 | `EMBEDDINGS` | 6 khóa mô hình `b0_tfidf_svd` … `b5_e5`, kèm tên mô hình và cột văn bản đầu vào |
 | `VECTORIZER_PARAMS`, `BERTOPIC_VECTORIZER_PARAMS`, `UMAP_PARAMS` | Tham số dùng chung |
-| `BEST_EMBEDDING`, `BEST_SVD_DIM`, `BEST_MIN_CLUSTER_SIZE` | Cấu hình chốt. `BEST_SVD_DIM` do TV2 chốt theo C_v. Hai hằng số còn lại là **giá trị tạm**, TV4 cập nhật sau ngày 4 |
-
+| `BEST_EMBEDDING`, `BEST_SVD_DIM`, `BEST_MIN_CLUSTER_SIZE` | Cấu hình chốt. `BEST_SVD_DIM` do TV2 chốt theo C_v. `BEST_EMBEDDING`: TV4 chọn mô hình có NMI cao nhất khi chạy **BERTopic chế độ k = 6** (KE_HOACH §6.2), cập nhật sau ngày 4. A3 phải dùng **cùng embedding** với A4: A3 hiện chạy tạm `b5_e5`; nếu TV4 chọn mô hình khác, TV3 chạy lại mục 5–6 notebook 03 với mô hình đó. `BEST_MIN_CLUSTER_SIZE`: TV4 chốt |
 ---
 
 ## 3. Định dạng dữ liệu & giá trị dùng chung
@@ -181,7 +180,7 @@ Chạy: `python -m src.crawl`. Bảng chuyên mục từng báo khai báo trong 
 | `topic_words.csv` | `method, topic, n_docs, words` (`words`: các từ cách nhau 1 dấu cách) | TV2 (`lda`, `lsa_kmeans`), TV4 (`bertopic_k6`, `bertopic_hdbscan`), chỉ cho **cấu hình chốt** |
 | `doc_topics.csv` | `id, true_label, x, y, lda, lsa_kmeans, bert_kmeans, bertopic_k6, bertopic_hdbscan` | Mỗi người thêm cột của mình: TV2 (`lda`, `lsa_kmeans`), TV3 (`bert_kmeans`), TV4 (`bertopic_k6`, `bertopic_hdbscan`, `x`, `y`). **Đọc file nếu đã có, chỉ thêm hoặc cập nhật cột của mình, không tạo lại file, không xóa cột của người khác.** Nhãn của cấu hình chốt, seed 42; `x, y` từ `coords_2d` của `BEST_EMBEDDING` |
 
-Số thực làm tròn 4 chữ số thập phân. `time_s` đo bằng `time.perf_counter()`.
+Số thực làm tròn 4 chữ số thập phân. `time_s` đo bằng `time.perf_counter()`, tính **từ văn bản đến nhãn**: `lda`, `lsa_kmeans` gồm cả bước tạo biểu diễn; `bert_kmeans`, `bertopic` = thời gian embedding (lấy từ `embedding_time.csv`) **+** thời gian phân cụm.
 
 ### 5.2. Embedding & mô hình
 
