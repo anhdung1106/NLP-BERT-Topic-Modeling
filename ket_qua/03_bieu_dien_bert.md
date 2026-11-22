@@ -83,7 +83,7 @@ Quan hệ chất lượng và chi phí: B3 (37 s, NMI 0,45) là mô hình BERT r
   - `[CLS]` chỉ đạt NMI 0,17, mean pooling đạt 0,44.
   - Mô hình SBERT tốt nhất (E5) đạt NMI 0,57 (3 seed: 0,58 ± 0,02).
   - TF-IDF + SVD đạt 0,66, cao hơn mọi mô hình BERT.
-- **Bảng / hình:** bảng mục 2, `outputs/figures/fig5_nmi_thoi_gian.png`
+- **Bảng / hình:** bảng mục 2 của file này (kết quả A3, K-Means)
 - **Điểm nhấn:** BERT không tự động tốt hơn; cần đúng loại mô hình và so với đối chứng.
 
 ### Slide 3 – Chi phí và chủ đề tìm được
