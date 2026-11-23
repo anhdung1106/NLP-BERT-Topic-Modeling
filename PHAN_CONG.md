@@ -7,7 +7,7 @@
 | TV | Họ tên | Vai trò | Mảng công việc | File `ket_qua/` / `slides/` phụ trách | Trạng thái |
 |---|---|---|---|---|---|
 | TV1 | _điền tên_ | Lập trình | Dữ liệu: thu thập, tiền xử lý, thống kê mô tả | `ket_qua/01_du_lieu.md` | Xong |
-| TV2 | _Thanh Hằng_ | Lập trình | Mô hình truyền thống (A1, A2), bộ chỉ số đánh giá, phân tích lỗi | `ket_qua/02_mo_hinh_truyen_thong.md` | Đang làm (phân tích lỗi) |
+| TV2 | _Thanh Hằng_ | Lập trình | Mô hình truyền thống (A1, A2), bộ chỉ số đánh giá, phân tích lỗi | `ket_qua/02_mo_hinh_truyen_thong.md` | Xong |
 | TV3 | _điền tên_ | Lập trình | Biểu diễn BERT (B0–B5), A3 | `ket_qua/03_bieu_dien_bert.md` | Xong |
 | TV4 | _điền tên_ | Lập trình | BERTopic, Hướng B, A4, bảng và hình kết quả | `ket_qua/04_bertopic_so_sanh.md` | Xong |
 | TV5 | _điền tên_ | Lập trình | Quản lý repo, duyệt và merge PR, ứng dụng demo, video dự phòng | `ket_qua/05_demo.md`, `slides/kich_ban_demo.md` | Xong |
