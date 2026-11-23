@@ -151,14 +151,14 @@ Chạy: `python -m src.crawl`. Bảng chuyên mục từng báo khai báo trong 
 
 | Hàm | Đầu vào | Trả về | Mô tả |
 |---|---|---|---|
-| `build_bertopic(mode: str, seed=SEED, min_cluster_size=DEFAULT_MIN_CLUSTER_SIZE)` | `mode` ∈ `k6`, `hdbscan` | `BERTopic` | UMAP(`UMAP_PARAMS`, `random_state=seed`); `hdbscan`: `HDBSCAN(min_cluster_size, prediction_data=True)`; `k6`: `KMeans(N_TOPICS, random_state=seed)`; `CountVectorizer(**VECTORIZER_PARAMS)`; `embedding_model=None`, `top_n_words=TOP_N_WORDS` |
+| `build_bertopic(mode: str, seed=SEED, min_cluster_size=DEFAULT_MIN_CLUSTER_SIZE)` | `mode` ∈ `k6`, `hdbscan` | `BERTopic` | UMAP(`UMAP_PARAMS`, `random_state=seed`); `hdbscan`: `HDBSCAN(min_cluster_size, prediction_data=True)`; `k6`: `KMeans(N_TOPICS, n_init=10, random_state=seed)`; `CountVectorizer(**BERTOPIC_VECTORIZER_PARAMS)` (không lọc `min_df/max_df`: c-TF-IDF chạy trên tài liệu gộp của từng cụm, `min_df=3` sẽ bỏ từ chỉ đặc trưng cho 1–2 cụm); `language="multilingual"` (mặc định `"english"` xóa ký tự ngoài `[A-Za-z0-9 ]`, làm mất dấu tiếng Việt và `_`); `embedding_model=None`, `top_n_words=TOP_N_WORDS` |
 | `fit_bertopic(docs: list[str], embeddings, mode, seed=SEED, min_cluster_size=DEFAULT_MIN_CLUSTER_SIZE)` | `docs` = cột `text_tok` | `(model, labels)` | `model.fit_transform(docs, embeddings=embeddings)` |
 | `get_topic_words(model, top_n=TOP_N_WORDS)` | | `list[list[str]]` | Bỏ chủ đề `-1`, sắp theo số thứ tự chủ đề |
 | `reduce_noise(model, docs, labels, embeddings)` | | `labels` | `model.reduce_outliers(..., strategy="embeddings")` |
 | `coords_2d(embeddings, seed=SEED)` | | `np.ndarray (n, 2)` | UMAP 2 chiều để vẽ bản đồ (cosine) |
 | `save_bertopic(model, path=BERTOPIC_DIR)` | | `None` | `model.save(path, serialization="safetensors", save_ctfidf=True, save_embedding_model=False)` |
 | `load_bertopic(path=BERTOPIC_DIR)` | | `BERTopic` | |
-| `predict_bertopic(text: str, model, key=BEST_EMBEDDING)` | Văn bản thô | `(topic_id: int, prob: float)` | `model.transform([make_text_tok(text)], embeddings=embed_query(text, key))`. **App dùng hàm này** |
+| `predict_bertopic(text: str, model, key=BEST_EMBEDDING)` | Văn bản thô | `(topic_id: int, prob: float)` | Mô hình lưu bằng safetensors không giữ UMAP/HDBSCAN/K-Means, nên sau khi tải lại `model.transform` chỉ còn so cosine với vector trung bình mỗi chủ đề (`topic_embeddings_`) và trả về cosine, không phải xác suất. Hàm làm đúng phép so đó trên `embed_query(text, key)`: chủ đề = cosine lớn nhất (không xét `-1`), `prob` = softmax của các cosine đã chuẩn hóa z-score. **App dùng hàm này** |
 
 ### 4.7. `app/streamlit_app.py` – TV5
 
