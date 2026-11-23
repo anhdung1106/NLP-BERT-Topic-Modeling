@@ -143,6 +143,7 @@ Với tỉ lệ nhiễu thấp như vậy, gán lại nhiễu gần như không 
 - **Nhầm lẫn còn lại giữa Thời sự – Kinh tế – Công nghệ**, như ở LDA/LSA nhưng nhẹ hơn: BERTopic k = 6 tách được một chủ đề Thời sự riêng (đất, thuế, phường, xã: tin địa phương, hành chính; 209/290 bài), trong khi LSA dồn 285 bài Thời sự vào cụm 589 bài. Chủ đề "Nvidia" vẫn xuất hiện, nhưng gộp với thiết bị (iPhone, Apple) thành chủ đề Công nghệ (220/277 bài).
 - **Chi phí:** khi đã có embedding, BERTopic chỉ mất 4–9 s; gần như toàn bộ chi phí là bước embedding. MiniLM (37 s) là lựa chọn rẻ với NMI 0,591; E5 (129 s) tốt nhất.
 - **Hạn chế:** BERT chỉ nhận tiêu đề + sapo, còn TF-IDF dùng toàn văn; `min_cluster_size` chọn theo C_v ưu tiên ít cụm lớn; kết quả trên một bộ dữ liệu thu thập trong khoảng thời gian ngắn.
+- **Tái lập kết quả:** chế độ k = 6 cho cùng kết quả trên mọi máy. Chế độ HDBSCAN phụ thuộc hệ điều hành: macOS cho đúng số trong `results.csv` (5 chủ đề), Linux cho 10–12 chủ đề dù cùng phiên bản thư viện. Số chính thức là số trong `results.csv`.
 
 ## Dàn ý slide
 

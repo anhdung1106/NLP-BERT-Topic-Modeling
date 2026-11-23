@@ -9,7 +9,7 @@ Seminar môn Xử lý ngôn ngữ tự nhiên: so sánh topic modeling dựa tr�
 
 ## Cài đặt
 
-Yêu cầu Python 3.11.
+Yêu cầu Python 3.12. Các phiên bản thư viện trong `requirements.txt` đã được kiểm chứng trên macOS.
 
 ```bash
 python -m venv .venv
