@@ -15,7 +15,7 @@
 | B4 | Vietnamese-SBERT | Mean pooling | `text_bert_seg` | 768 | 104,4 | `b4_vi_sbert.npy` |
 | B5 | Multilingual-E5 | Mean pooling | `"query: "` + `text_bert` | 768 | 129,1 | `b5_e5.npy` |
 
-Cấu hình máy chạy: CPU 12 luồng, không dùng GPU, _điền tên CPU và RAM_. Mỗi file là ma trận 1.800 × d, float32, đã chuẩn hóa L2, cùng thứ tự dòng với `articles.csv`. Cắt tối đa 256 token. Thời gian không gồm thời gian tải mô hình (đã chạy khởi động trước khi đo). B1 và B2 được tính riêng từng lần nên mỗi khóa đều gánh đủ thời gian chạy mBERT.
+Cấu hình máy chạy: CPU 12 luồng, không dùng GPU. Mỗi file là ma trận 1.800 × d, float32, đã chuẩn hóa L2, cùng thứ tự dòng với `articles.csv`. Cắt tối đa 256 token. Thời gian không gồm thời gian tải mô hình (đã chạy khởi động trước khi đo). B1 và B2 được tính riêng từng lần nên mỗi khóa đều gánh đủ thời gian chạy mBERT.
 
 ## 2. BERT + K-Means (A3, k = 6, seed 42)
 

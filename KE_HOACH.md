@@ -208,25 +208,30 @@ Mỗi mô hình chạy ở **cả hai chế độ**. Mô hình có NMI cao nhấ
 
 ### 7.2. Bảng kết quả
 
-**Bảng 1: Hướng A (k = 6)**
+Kết quả thực nghiệm (trung bình 3 seed, nguồn `outputs/tables/results.csv`; chi tiết và nhận xét ở [ket_qua/04](ket_qua/04_bertopic_so_sanh.md)).
+
+**Bảng 1: Hướng A (trung bình ± độ lệch chuẩn)**
 
 | Phương pháp | ARI | NMI | Purity | C_v | Diversity | Thời gian (s) |
 |---|---|---|---|---|---|---|
-| A1. LDA | | | | | | |
-| A2. LSA + K-Means | | | | | | |
-| A3. BERT + K-Means | | | | | | |
-| A4. BERTopic | | | | | | |
+| A1. LDA | 0,448 ± 0,032 | 0,503 ± 0,022 | 0,652 ± 0,021 | 0,679 ± 0,039 | 0,922 ± 0,025 | 23,6 |
+| A2. LSA + K-Means (SVD 50 chiều) | 0,572 ± 0,046 | 0,651 ± 0,015 | 0,786 ± 0,027 | 0,792 ± 0,004 | 0,978 ± 0,010 | 2,0 |
+| A3. BERT + K-Means (E5) | 0,531 ± 0,012 | 0,584 ± 0,020 | 0,724 ± 0,008 | 0,720 ± 0,043 | 0,961 ± 0,010 | 129,6 |
+| A4. BERTopic (k = 6, E5) | 0,623 ± 0,004 | 0,647 ± 0,004 | 0,809 ± 0,003 | 0,711 ± 0,003 | 0,967 ± 0,000 | 133,0 |
+| A4. BERTopic (HDBSCAN, E5) | 0,432 ± 0,002 | 0,627 ± 0,001 | 0,623 ± 0,002 | 0,825 ± 0,000 | 0,860 ± 0,000 | 133,0 |
 
 **Bảng 2: Hướng B**
 
-| Mô hình | NMI (k=6) | ARI (k=6) | NMI (HDBSCAN) | C_v | Diversity | Số chủ đề | Tỉ lệ nhiễu | Thời gian embedding (s) |
+| Mô hình | NMI (k=6) | ARI (k=6) | NMI (HDBSCAN) | C_v (k=6) | Diversity (k=6) | Số chủ đề (HDBSCAN) | Tỉ lệ nhiễu | Thời gian embedding (s) |
 |---|---|---|---|---|---|---|---|---|
-| B0. TF-IDF + SVD | | | | | | | | |
-| B1. mBERT `[CLS]` | | | | | | | | |
-| B2. mBERT mean pooling | | | | | | | | |
-| B3. Multilingual MiniLM (SBERT) | | | | | | | | |
-| B4. Vietnamese-SBERT | | | | | | | | |
-| B5. Multilingual-E5 | | | | | | | | |
+| B0. TF-IDF + SVD | 0,626 | 0,460 | 0,647 | 0,820 | 0,978 | 12,0 | 19,7% | 1,1 |
+| B1. mBERT `[CLS]` | 0,376 | 0,285 | 0,010 | 0,661 | 0,828 | 2,0 | 0,0% | 182,7 |
+| B2. mBERT mean pooling | 0,506 | 0,445 | 0,455 | 0,675 | 0,922 | 9,7 | 16,5% | 173,2 |
+| B3. Multilingual MiniLM (SBERT) | 0,591 | 0,549 | 0,421 | 0,719 | 0,939 | 8,7 | 18,4% | 37,4 |
+| B4. Vietnamese-SBERT | 0,583 | 0,540 | 0,424 | 0,759 | 0,967 | 6,7 | 10,4% | 104,4 |
+| B5. Multilingual-E5 | 0,647 | 0,623 | 0,627 | 0,711 | 0,967 | 5,0 | 2,1% | 129,1 |
+
+HDBSCAN dùng `min_cluster_size = 30`.
 
 ### 7.3. Hình minh họa (`outputs/figures/`)
 
