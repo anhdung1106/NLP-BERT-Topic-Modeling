@@ -46,15 +46,29 @@
 | 5 | phim, diễn_viên, chương_trình, văn_hóa, khán_giả, tuổi, gia_đình, ăn, bộ, việt_nam (335 bài) | iphone, dùng, thiết_bị, apple, màn_hình, điện_thoại, pin, camera, tính_năng, samsung (171 bài) |
 
 ## 5. Phân tích lỗi (LDA và BERTopic)
+So sánh LDA với BERTopic k = 6 (embedding E5), seed 42. Mỗi chủ đề được gán nhãn chiếm đa số; một bài "đúng" nếu nhãn đó trùng nhãn thật. Số chủ đề của mỗi mô hình đánh độc lập (chủ đề 2 của LDA khác chủ đề 2 của BERTopic); "→" là nhãn đa số của chủ đề.
+
+**Tổng quan:** LDA xếp đúng 64,1% số bài, LSA 76,9%, BERTopic 80,8%. Có **437 bài LDA sai nhưng BERTopic đúng**, chỉ **136 bài ngược lại**; 210 bài cả hai cùng sai.
 
 | ID | Tiêu đề | Nhãn thật | LDA | BERTopic | Nguyên nhân |
 |---|---|---|---|---|---|
-| | | | | | |
+| doc_0958 | Tội phạm mạng dùng AI 'thay áo' kịch bản cũ, hack Zalo người dùng | Công nghệ | 3 → Sức khỏe ✗ | 5 → Công nghệ ✓ | Chỉ có từ "dùng" (8 lần) trùng top từ chủ đề Sức khỏe ("dùng" thuốc), nhưng đủ kéo LDA đi. BERT hiểu ngữ cảnh tài khoản, Zalo, tội phạm mạng |
+| doc_1565 | Hướng dẫn chuyển nội dung tin nhắn trên Zalo sang điện thoại mới | Công nghệ | 3 → Sức khỏe ✗ | 5 → Công nghệ ✓ | Cùng lỗi từ "dùng": LDA xếp tổng cộng 98 bài Công nghệ vào chủ đề Sức khỏe |
+| doc_0886 | Jensen Huang từ chức CEO Nvidia sau bê bối tình cảm | Công nghệ | 1 → Thời sự ✗ | 5 → Công nghệ ✓ | Chủ đề 1 của LDA trộn tin Nvidia với tin vụ việc, lãnh đạo (65 bài Thời sự, 54 bài Công nghệ). BERTopic đặt tin Nvidia cạnh tin iPhone, thiết bị |
+| doc_0746 | Bị phạt từ 5 triệu đồng trở xuống có thể thay bằng lao động công ích | Thời sự | 2 → Kinh tế ✗ | 2 → Thời sự ✓ | Từ tiền tệ (tiền ×10, triệu, đồng) kéo về Kinh tế, dù nội dung là chính sách xử phạt |
+| doc_0206 | Ăn khoai lang lúc nào tốt nhất? Điều nhiều người có thể chưa biết | Sức khỏe | 5 → Giải trí ✗ | 1 → Sức khỏe ✓ | Từ "ăn" (16 lần) trùng chủ đề Giải trí, đời sống (ăn, gia_đình, tuổi). BERT hiểu đây là bài dinh dưỡng |
+| doc_0140 | FPT đưa nhà máy công suất 300 triệu chip/năm vào vận hành thử nghiệm | Công nghệ | 4 → Công nghệ ✓ | 0 → Kinh tế ✗ | Bài vừa công nghệ (chip, bán dẫn) vừa đầu tư sản xuất (nhà máy, công suất). BERT nắm ý "dự án công nghiệp" nên xếp Kinh tế; ranh giới chuyên mục mơ hồ |
+| doc_1705 | Việt Nam đẩy mạnh đưa AI vào hoạt động thực tế | Công nghệ | 4 → Công nghệ ✓ | 0 → Kinh tế ✗ | Tin chính sách AI ở tầm vĩ mô, văn phong giống tin kinh tế. Công nghệ → Kinh tế là lỗi lớn thứ hai của BERTopic (57 bài) |
+| doc_1208 | Bộ Tài chính đề xuất giảm mạnh mức phạt vi phạm thuế cho hộ kinh doanh | Kinh tế | 2 → Kinh tế ✓ | 2 → Thời sự ✗ | Từ "thuế" xuất hiện 34 lần. BERTopic có riêng một cụm chính sách, hành chính (thuế, phường, xã, tỉnh) mà đa số là bài Thời sự |
+| doc_0697 | Hơn 70 học sinh Đồng Nai nghi ngộ độc sau ăn cơm bán trú ở trường | Sức khỏe | 3 → Sức khỏe ✓ | 2 → Thời sự ✗ | LDA bắt được từ y khoa (bệnh_viện, điều_trị); BERTopic hiểu đây là tin sự kiện ở địa phương. Báo xếp vào Sức khỏe, nhưng xếp Thời sự cũng hợp lý |
+| doc_0292 | Thú vị bộ sách đồng hành cùng sức khỏe tinh thần người trẻ | Giải trí | 5 → Giải trí ✓ | 1 → Sức khỏe ✗ | Bài giới thiệu sách (chuyên mục Văn hóa) nhưng nội dung về sức khỏe tinh thần: BERTopic xếp theo nội dung, còn nhãn của báo theo chuyên mục |
 
 **Các cặp chủ đề hay nhầm lẫn:**
 
-- 
-
+- **LDA (647 bài sai):** Thời sự → Kinh tế (111), Kinh tế → Công nghệ (108), Công nghệ → Sức khỏe (98), Thời sự → Công nghệ (89), Công nghệ → Thời sự (54). Nguyên nhân: các chuyên mục dùng chung từ (tiền, đồng, doanh_nghiệp, công_nghệ), và một số từ rất phổ biến ("dùng", "ăn") kéo cả bài sang chủ đề không liên quan.
+- **BERTopic (346 bài sai):** Thời sự → Kinh tế (64), Công nghệ → Kinh tế (57), Kinh tế → Công nghệ (45), Kinh tế → Thời sự (43). Vẫn là bộ ba Thời sự – Kinh tế – Công nghệ, nhưng số bài sai **giảm gần một nửa**, và không còn lỗi lạc đề kiểu Công nghệ → Sức khỏe.
+- **Nhiều lỗi của BERTopic thực chất là bài nằm giữa hai chuyên mục** (tin ngộ độc ở trường, sách về sức khỏe tinh thần, nhà máy chip): mô hình xếp theo nội dung, còn nhãn của báo xếp theo chuyên mục. Đây là giới hạn khi dùng chuyên mục báo làm "đáp án".
+- **HDBSCAN** (chi tiết ở `ket_qua/04`): gộp Thời sự, Kinh tế, Công nghệ thành một cụm 907 bài, đồng thời tách Thể thao thành bóng đá Việt Nam (186 bài) và bóng đá quốc tế (82 bài). Như vậy mô hình tìm ra chủ đề con có nghĩa nhưng không tách được ba chuyên mục dùng chung từ vựng.
 ## 6. Nhận xét
 
 - **LSA + K-Means vượt LDA trên mọi chỉ số** (NMI 0,651 so với 0,503; C_v 0,792 so với 0,679) và chạy nhanh hơn khoảng 12 lần (2,0 s so với 23,6 s). Một lý do có thể: LDA giả định mỗi bài là hỗn hợp nhiều chủ đề, khi ép mỗi bài về một nhãn (chủ đề có xác suất cao nhất) thì các bài lẫn lộn dễ bị gán sai.
