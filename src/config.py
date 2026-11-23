@@ -70,7 +70,8 @@ UMAP_PARAMS = dict(n_neighbors=15, n_components=5, min_dist=0.0, metric="cosine"
 MIN_CLUSTER_SIZES = [15, 30, 50]
 DEFAULT_MIN_CLUSTER_SIZE = 30
 
-# Cấu hình chốt: giá trị tạm, TV4 cập nhật sau ngày 4
-BEST_EMBEDDING = "b3_minilm"
+# Cấu hình chốt (notebook 04). BEST_EMBEDDING: NMI cao nhất ở BERTopic k = 6 (TB 3 seed);
+# BEST_MIN_CLUSTER_SIZE: C_v cao nhất ở HDBSCAN trên BEST_EMBEDDING; BEST_SVD_DIM: TV2 chốt theo C_v
+BEST_EMBEDDING = "b5_e5"
 BEST_SVD_DIM = 50
 BEST_MIN_CLUSTER_SIZE = 30
